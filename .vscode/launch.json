@@ -7,14 +7,28 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "start",
+            "name": "main",
             "skipFiles": [
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/main.js",
             "cwd": "${workspaceFolder}/",
             "args": [
-                "--config=config.development.json"
+                "--config=config.development.json",
+                "--daemon=false"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "cli",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/cli/index.js",
+            "cwd": "${workspaceFolder}/",
+            "args": [
+                "cmd"
             ]
         }
     ]

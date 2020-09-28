@@ -1,20 +1,15 @@
 const ndapp = require("ndapp");
 
-const { version, name } = require("./package.json");
+const info = require("./info");
 
 ndapp({
 	components: [
-		() => new (require("./components/server/Server"))(),
-		() => new (require("./components/PluginsManager"))(),
-		() => new (require("./components/jobs/JobsManager"))()
+		// () => new (require("./components/DaemonServer"))()
+		// () => new (require("./components/server/Server"))(),
+		// () => new (require("./components/PluginsManager"))(),
+		// () => new (require("./components/jobs/JobsManager"))()
 	],
-	enums: {
-		"STAGE_TYPES": new ndapp.enum({
-			"JS_SCRIPT": "js",
-			"SHELL_SCRIPT": "shell",
-			"JOB": "job"
-		})
-	},
+	enums: require("./enums"),
 	libs: {
 		express: require("express"),
 		bodyParser: require("body-parser"),
@@ -23,10 +18,12 @@ ndapp({
 	tools: {
 	},
 	specials: {
-		info: { version, name },
+		info,
 		events: require("./events")
 	},
 	onRun: () => {
-		app.jobsManager.queueJob("jbot");
+		app.log.info(`${app.info.name} v${app.info.version}`);
+
+		// app.jobsManager.queueJob("jbot");
 	}
 });
