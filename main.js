@@ -7,7 +7,7 @@ ndapp({
 		// () => new (require("./components/DaemonServer"))()
 		// () => new (require("./components/server/Server"))(),
 		// () => new (require("./components/PluginsManager"))(),
-		// () => new (require("./components/jobs/JobsManager"))()
+		() => new (require("./components/jobs/JobsManager"))()
 	],
 	enums: require("./enums"),
 	libs: {
@@ -24,6 +24,6 @@ ndapp({
 	onRun: () => {
 		app.log.info(`${app.info.name} v${app.info.version}`);
 
-		// app.jobsManager.queueJob("jbot");
+		app.jobsManager.run("jbot");
 	}
 });
