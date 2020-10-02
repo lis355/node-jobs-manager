@@ -14,7 +14,7 @@
             "program": "${workspaceFolder}/main.js",
             "cwd": "${workspaceFolder}/",
             "args": [
-                "--config=config.development.json",
+                "--workspace=workspace.js",
                 "--daemon=false"
             ]
         },

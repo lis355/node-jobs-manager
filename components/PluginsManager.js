@@ -4,7 +4,7 @@ module.exports = class PluginsManager extends ndapp.ApplicationComponent {
 
 		this.plugins = [];
 
-		app.config.plugins.forEach(plugin => {
+		app.workspace.plugins.forEach(plugin => {
 			const Plugin = require(app.path.join(process.cwd(), plugin.file));
 			this.plugins.push(new Plugin());
 		});

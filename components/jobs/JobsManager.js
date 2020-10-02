@@ -4,13 +4,25 @@ module.exports = class JobsManager extends ndapp.ApplicationComponent {
 	async initialize() {
 		await super.initialize();
 
-		this.jobs = app.config.jobs.map(job => new Job(job));
+		this.queue = [];
+
+		this.currentJob = null;
 	}
 
 	run(name) {
-		const job = this.jobs.find(job => job.name === name);
+		let job = app.workspace.jobs.find(job => job.name === name);
 		if (job) {
-			job.run();
+			this.queue.push(new Job(job));
+			setImmediate(this.update.bind(this));
 		}
+	}
+
+	async update() {
+		if (this.queue.length === 0 || this.currentJob) return;
+
+		this.currentJob = this.queue.pop();
+		await this.currentJob.run();
+
+		setImmediate(this.update.bind(this));
 	}
 };

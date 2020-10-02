@@ -25,7 +25,7 @@ module.exports = class Server extends ndapp.ApplicationComponent {
 			return res.sendStatus(httpStatus.NOT_FOUND);
 		});
 
-		const port = app.config.port;
+		const port = app.workspace.port;
 
 		httpShutdown(http.createServer({}, application)).listen({ port }, () => {
 			app.log.info(`${app.info.name} v${app.info.version} started on port ${port}`);
