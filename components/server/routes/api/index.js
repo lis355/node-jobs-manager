@@ -2,10 +2,10 @@ const { httpStatus } = app.libs;
 
 const router = app.libs.express.Router();
 
-router.get("/jobs/queue/", (req, res) => {
-	app.jobsManager.queueJob(req.query.name);
+router.get("/jobs/run/", (req, res) => {
+	const jobId = app.jobsManager.runJob(req.query.name);
 
-	return res.sendStatus(httpStatus.OK);
+	return res.sendStatus(jobId ? httpStatus.OK : httpStatus.NOT_FOUND);
 });
 
 router.use("*", (req, res) => {

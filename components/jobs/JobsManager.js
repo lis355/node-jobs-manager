@@ -9,12 +9,17 @@ module.exports = class JobsManager extends ndapp.ApplicationComponent {
 		this.currentJob = null;
 	}
 
-	run(name) {
+	runJob(name) {
 		let job = app.workspace.jobs.find(job => job.name === name);
 		if (job) {
-			this.queue.push(new Job(job));
+			job = new Job(job);
+			this.queue.push(job);
 			setImmediate(this.update.bind(this));
+
+			return job.id;
 		}
+
+		return null;
 	}
 
 	async update() {
@@ -22,6 +27,7 @@ module.exports = class JobsManager extends ndapp.ApplicationComponent {
 
 		this.currentJob = this.queue.pop();
 		await this.currentJob.run();
+		this.currentJob = null;
 
 		setImmediate(this.update.bind(this));
 	}

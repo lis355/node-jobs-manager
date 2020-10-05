@@ -1,4 +1,5 @@
 const Stage = require("./Stage");
+const executeJavaScript = require("./executeJavaScript");
 const executeShellCommand = require("./executeShellCommand");
 
 const { JOB_STAGE_TYPES } = app.enums;
@@ -7,12 +8,9 @@ class JavaScriptStage extends Stage {
 	async run() {
 		await super.run();
 
-		const scriptPath = require.resolve(this.file);
-		app.log.info(`Execute JS script at ${scriptPath}`);
+		app.log.info(`Execute JS script at ${this.file}`);
 
-		delete require.cache[scriptPath];
-		const asyncFunction = require(scriptPath);
-		await asyncFunction(this);
+		await executeJavaScript(this.file, this);
 	}
 }
 
@@ -28,12 +26,12 @@ class ShellStage extends Stage {
 
 			const exitCode = await executeShellCommand({
 				cmd,
-				cwd: this.job.cwd,
+				cwd: this.cwd,
 				onStdOutData: data => {
-					app.log.info(data.toString());
+					app.log.info(data.toString().trim());
 				},
 				onStdErrData: data => {
-					const message = data.toString();
+					const message = data.toString().trim();
 					this.errorMessage += message + app.os.EOL;
 
 					app.log.error(message);

@@ -6,15 +6,26 @@ class AppManager extends ndapp.Application {
 	async initialize() {
 		app.log.info(`${app.info.name} v${app.info.version}`);
 
-		app.workspace = require(app.path.join(process.cwd(), app.arguments.workspace));
+		this.loadWorkspace();
 
 		await super.initialize();
 	}
 
-	async run() {
-		await super.run();
+	// async run() {
+	// 	await super.run();
 
-		app.jobsManager.run("jbot2");
+	// 	app.jobsManager.runJob("test");
+	// }
+
+	loadWorkspace() {
+		const workspacePath = app.path.resolve(app.arguments.workspace);
+		if (app.fs.existsSync(workspacePath)) {
+			app.workspace = require(workspacePath);
+		} else {
+			app.workspace = {
+				jobs: []
+			};
+		}
 	}
 }
 
@@ -22,7 +33,7 @@ ndapp({
 	app: new AppManager(),
 	components: [
 		// () => new (require("./components/DaemonServer"))()
-		// () => new (require("./components/server/Server"))(),
+		() => new (require("./components/server/Server"))(),
 		// () => new (require("./components/PluginsManager"))(),
 		() => new (require("./components/jobs/JobsManager"))()
 	],

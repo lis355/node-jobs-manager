@@ -14,8 +14,7 @@
             "program": "${workspaceFolder}/main.js",
             "cwd": "${workspaceFolder}/",
             "args": [
-                "--workspace=workspace.js",
-                "--daemon=false"
+                "--workspace=C:/Programming/JDAM/Code/jbot/services/deploy/workspace.js"
             ]
         },
         {
@@ -27,9 +26,7 @@
             ],
             "program": "${workspaceFolder}/cli/index.js",
             "cwd": "${workspaceFolder}/",
-            "args": [
-                "cmd"
-            ]
+            "args": []
         }
     ]
 }

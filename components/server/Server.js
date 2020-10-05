@@ -4,6 +4,8 @@ const cors = require("cors");
 
 const { httpStatus } = app.libs;
 
+const DEFAULT_API_SERVER_PORT = 7001;
+
 module.exports = class Server extends ndapp.ApplicationComponent {
 	async initialize() {
 		await super.initialize();
@@ -25,10 +27,10 @@ module.exports = class Server extends ndapp.ApplicationComponent {
 			return res.sendStatus(httpStatus.NOT_FOUND);
 		});
 
-		const port = app.workspace.port;
+		const port = app.workspace.port || DEFAULT_API_SERVER_PORT;
 
 		httpShutdown(http.createServer({}, application)).listen({ port }, () => {
-			app.log.info(`${app.info.name} v${app.info.version} started on port ${port}`);
+			app.log.info(`API server started on port ${port}`);
 		});
 	}
 };
