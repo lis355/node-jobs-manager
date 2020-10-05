@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const ndapp = require("ndapp");
 
 const info = require("./info");
@@ -18,10 +20,9 @@ class AppManager extends ndapp.Application {
 	// }
 
 	loadWorkspace() {
-		const workspacePath = app.path.resolve(app.arguments.workspace);
-		if (app.fs.existsSync(workspacePath)) {
-			app.workspace = require(workspacePath);
-		} else {
+		try {
+			app.workspace = require(app.path.resolve(app.arguments.workspace));
+		} catch (error) {
 			app.workspace = {
 				jobs: []
 			};
