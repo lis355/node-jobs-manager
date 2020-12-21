@@ -13,9 +13,10 @@
             ],
             "program": "${workspaceFolder}/main.js",
             "cwd": "${workspaceFolder}/",
-            "args": [
-                "--workspace=C:/Programming/JDAM/Code/jbot/services/deploy/workspace.js"
-            ]
+            "args": [],
+            "env": {
+                "DEVELOPER_ENVIRONMENT": "true"
+            }
         },
         {
             "type": "node",
