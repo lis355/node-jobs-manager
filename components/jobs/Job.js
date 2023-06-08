@@ -1,5 +1,4 @@
 const { createStage } = require("./Stages");
-const executeJavaScript = require("./executeJavaScript");
 
 module.exports = class Job {
 	constructor(job) {
@@ -27,6 +26,8 @@ module.exports = class Job {
 		app.events.emit(app.events.EVENT_TYPES.JOB_STARTED, this);
 
 		for (let i = 0; i < this.stages.length; i++) {
+			if (this.canceled) break;
+
 			try {
 				await this.stages[i].run();
 			} catch (error) {
@@ -42,18 +43,9 @@ module.exports = class Job {
 		app.events.emit(app.events.EVENT_TYPES.JOB_FINISHED, this);
 	}
 
-	async abort(error) {
-		this.error = error;
-		this.aborted = true;
+	cancel() {
+		this.canceled = true;
 
-		app.log.info(`Job ${this.name} aborted with error ${this.error.message}`);
-
-		if (this.errorHandler && this.errorHandler.file) {
-			try {
-				await executeJavaScript(this.errorHandler.file, this, this.error);
-			} catch (error) {
-				app.log.error(error.message);
-			}
-		}
+		app.log.info(`Job ${this.name} canceled`);
 	}
 };
