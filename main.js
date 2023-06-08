@@ -17,7 +17,14 @@ class AppManager extends ndapp.Application {
 			}
 		}
 
-		this.loadWorkspace();
+		const workspacePath = app.path.resolve(app.constants.workspace || app.arguments.workspace || "");
+		try {
+			app.workspace = require(workspacePath);
+		} catch (error) {
+			app.log.error(`Error in ${workspacePath}: ${error.message}`);
+
+			return app.quit();
+		}
 
 		await super.initialize();
 	}
@@ -25,19 +32,6 @@ class AppManager extends ndapp.Application {
 	// async run() {
 	// 	await super.run();
 	// }
-
-	loadWorkspace() {
-		const workspacePath = app.path.resolve(app.constants.workspace || app.arguments.workspace);
-		try {
-			app.workspace = require(workspacePath);
-		} catch (error) {
-			app.log.error(`Error in ${workspacePath}: ${error.message}`);
-
-			app.workspace = {
-				jobs: []
-			};
-		}
-	}
 }
 
 ndapp({
