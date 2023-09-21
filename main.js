@@ -8,7 +8,7 @@ const DEVELOPER_ENVIRONMENT = Boolean(process.env.DEVELOPER_ENVIRONMENT);
 
 class AppManager extends ndapp.Application {
 	async initialize() {
-		app.log.info(`${app.info.name} v${app.info.version}`);
+		app.log.info(`${app.info.name} v${app.info.version}, NodeJS ${process.version}`);
 
 		if (app.constants.DEVELOPER_ENVIRONMENT) {
 			const developConstantsFilePath = app.path.join(process.cwd(), "constants.development.js");
@@ -20,6 +20,9 @@ class AppManager extends ndapp.Application {
 		const workspacePath = app.path.resolve(app.constants.workspace || app.arguments.workspace || "");
 		try {
 			app.workspace = require(workspacePath);
+
+			app.log.info(`Loaded workspace from ${workspacePath}`);
+			app.log.info(`Jobs: [${app.workspace.jobs.map(job => job.name).join(", ")}]`);
 		} catch (error) {
 			app.log.error(`Error in ${workspacePath}: ${error.message}`);
 

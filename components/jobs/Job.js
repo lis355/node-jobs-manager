@@ -48,4 +48,12 @@ module.exports = class Job {
 
 		app.log.info(`Job ${this.name} canceled`);
 	}
+
+	abort(error = null) {
+		this.canceled = true;
+
+		app.log.info(`Job ${this.name} aborted`);
+
+		if (error) app.log.error(error.stack);
+	}
 };

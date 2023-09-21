@@ -17,6 +17,8 @@ module.exports = class JobsManager extends ndapp.ApplicationComponent {
 			setImmediate(this.update.bind(this));
 
 			return job.id;
+		} else {
+			app.log.error(`No job ${name}`);
 		}
 
 		return null;
