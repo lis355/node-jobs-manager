@@ -11,20 +11,28 @@ class AppManager extends ndapp.Application {
 		app.log.info(`${app.info.name} v${app.info.version}, NodeJS ${process.version}`);
 
 		if (app.constants.DEVELOPER_ENVIRONMENT) {
-			const developConstantsFilePath = app.path.join(process.cwd(), "constants.development.js");
-			if (app.fs.existsSync(developConstantsFilePath)) {
-				app.libs._.assign(app.constants, require(developConstantsFilePath));
-			}
+			const developConstantsFilePath = app.path.join(process.cwd(), "config.development.js");
+			app.develop = app.fs.existsSync(developConstantsFilePath) ? require(developConstantsFilePath) : {};
 		}
 
-		const workspacePath = app.path.resolve(app.constants.workspace || app.arguments.workspace || "");
-		try {
-			app.workspace = require(workspacePath);
+		let workspacePath;
+		if (app.arguments.workspace) workspacePath = app.arguments.workspace;
+		if (app.constants.DEVELOPER_ENVIRONMENT &&
+			app.develop.workspacePath) workspacePath = app.develop.workspacePath;
 
-			app.log.info(`Loaded workspace from ${workspacePath}`);
-			app.log.info(`Jobs: [${app.workspace.jobs.map(job => job.name).join(", ")}]`);
-		} catch (error) {
-			app.log.error(`Error in ${workspacePath}: ${error.message}`);
+		if (app.fs.existsSync(workspacePath)) {
+			try {
+				app.workspace = require(workspacePath);
+
+				app.log.info(`Loaded workspace from ${workspacePath}`);
+				app.log.info(`Jobs: [${app.workspace.jobs.map(job => job.name).join(", ")}]`);
+			} catch (error) {
+				app.log.error(`Error in ${workspacePath}: ${error.message}`);
+
+				return app.quit();
+			}
+		} else {
+			app.log.info("No workspace file");
 
 			return app.quit();
 		}
@@ -32,9 +40,12 @@ class AppManager extends ndapp.Application {
 		await super.initialize();
 	}
 
-	// async run() {
-	// 	await super.run();
-	// }
+	async run() {
+		await super.run();
+
+		if (app.constants.DEVELOPER_ENVIRONMENT &&
+			app.develop.runJob) app.jobsManager.runJob(app.develop.runJob);
+	}
 }
 
 ndapp({
