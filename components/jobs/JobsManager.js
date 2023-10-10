@@ -12,7 +12,7 @@ module.exports = class JobsManager extends ndapp.ApplicationComponent {
 	runJob(name) {
 		let job = app.workspace.jobs.find(job => job.name === name);
 		if (job) {
-			job = new Job(job);
+			job = new Job(this, job);
 			this.queue.push(job);
 			setImmediate(this.update.bind(this));
 

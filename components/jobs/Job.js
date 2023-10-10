@@ -1,8 +1,10 @@
 const { createStage } = require("./Stages");
 
 module.exports = class Job {
-	constructor(job) {
+	constructor(jobsManager, job) {
 		app.libs._.assign(this, job);
+
+		this.jobsManager = jobsManager;
 
 		this.stages = this.stages.map(stage => createStage(this, stage));
 
